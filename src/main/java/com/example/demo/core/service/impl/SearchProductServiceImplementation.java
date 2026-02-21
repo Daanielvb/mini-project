@@ -6,7 +6,7 @@ import com.example.demo.core.service.SearchProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 
 import static java.lang.String.format;
 
@@ -17,12 +17,12 @@ public class SearchProductServiceImplementation implements SearchProductService 
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> findAll() {
+    public Collection<Product> findAll() {
         return productRepository.findAll();
     }
 
     @Override
-    public List<Product> findAllWithPriceInRange(double minPrice, double maxPrice) {
+    public Collection<Product> findAllWithPriceInRange(double minPrice, double maxPrice) {
         if (minPrice > maxPrice) {
             throw new IllegalArgumentException(format("Min price %s exceeds max price %s", minPrice, maxPrice));
         }
