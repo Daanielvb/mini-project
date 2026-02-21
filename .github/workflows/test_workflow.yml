@@ -1,0 +1,25 @@
+name: Spring Boot CI Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      # You can add other branches like 'develop' if needed
+      # - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17' # Specify your Java version
+
+      - name: Build and run tests
+        run: ./gradlew clean build # Or ./gradlew clean build if using Gradle
+        # The 'clean install' goal typically runs the tests as part of the build lifecycle
