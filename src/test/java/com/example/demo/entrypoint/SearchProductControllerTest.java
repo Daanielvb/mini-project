@@ -59,7 +59,7 @@ class SearchProductControllerTest {
         String content = response.getResponse().getContentAsString();
         List<Product> actualProducts = objectMapper.readValue(content, new TypeReference<List<Product>>() {});
 
-        assertThat(actualProducts).hasSize(104);
+        assertThat(actualProducts).hasSize(415);
         System.out.println(format("took %d ms to finish processing", System.nanoTime() - start));
     }
 
