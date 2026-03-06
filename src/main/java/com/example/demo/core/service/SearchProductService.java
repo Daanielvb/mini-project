@@ -3,8 +3,6 @@ package com.example.demo.core.service;
 import com.example.demo.core.domain.Product;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 public interface SearchProductService {
 

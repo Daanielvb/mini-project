@@ -58,8 +58,7 @@ public class ProductRepositoryInMemory implements ProductRepository {
             } while (page <= totalPages);
 
             Collections.sort(products);
-
-            System.out.println("Loaded " + products.size() + " products from API");
+            log.info("Loaded products from API");
 
         } catch (Exception e) {
             log.error("Error during data load", e);
