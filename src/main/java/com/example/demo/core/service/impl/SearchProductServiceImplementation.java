@@ -37,6 +37,6 @@ public class SearchProductServiceImplementation implements SearchProductService 
 
     @Override
     public Collection<Product> findAllWithStock() {
-        return List.of();
+        return productRepository.findAll().stream().filter(it -> it.available() >= 0).toList();
     }
 }
