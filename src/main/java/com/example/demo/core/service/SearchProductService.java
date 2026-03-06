@@ -9,4 +9,6 @@ public interface SearchProductService {
     Collection<Product> findAll();
 
     Collection<Product> findAllWithPriceInRange(double minPrice, double maxPrice);
+
+    Collection<Product> findAllWithStock();
 }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -31,5 +32,10 @@ public class SearchProductServiceImplementation implements SearchProductService 
             throw new IllegalArgumentException(format("Min price %s exceeds max price %s", minPrice, maxPrice));
         }
         return productRepository.search(minPrice, maxPrice);
+    }
+
+    @Override
+    public Collection<Product> findAllWithStock() {
+        return List.of();
     }
 }
