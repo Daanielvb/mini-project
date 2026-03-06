@@ -29,6 +29,7 @@ public class SearchProductServiceImplementation implements SearchProductService 
     public Collection<Product> findAllWithPriceInRange(double minPrice, double maxPrice) {
         log.info("Finding all products with price in range");
         if (minPrice > maxPrice) {
+            System.out.println("whatever");
             throw new IllegalArgumentException(format("Min price %s exceeds max price %s", minPrice, maxPrice));
         }
         return productRepository.search(minPrice, maxPrice);
