@@ -68,6 +68,8 @@ class SearchProductControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value("400"))
-                .andExpect(jsonPath("$.detail").value("Min price 30.0 exceeds max price 20.0"));
+                .andExpect(jsonPath("$.detail").value("Invalid price input"))
+                .andExpect(jsonPath("$.errors[0]").value("Min price 30.0 exceeds max price 20.0")
+                );
     }
 }

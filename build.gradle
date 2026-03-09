@@ -33,12 +33,12 @@ sonar {
 }
 
 tasks.jacocoTestReport {
-	dependsOn(tasks.test) // Garante que os testes rodem antes do relatório
+	dependsOn(tasks.test)
 
 	reports {
 		xml.required.set(true)
 		html.required.set(true)
-		// html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // Pasta personalizada
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // Pasta personalizada
 	}
 }
 
@@ -50,11 +50,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'com.mysql:mysql-connector-j:9.6.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {
