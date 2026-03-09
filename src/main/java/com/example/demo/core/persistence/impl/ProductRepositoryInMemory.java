@@ -27,36 +27,47 @@ public class ProductRepositoryInMemory implements ProductRepository {
     @PostConstruct
     public void loadProducts() {
         try {
-            String url = "https://jsonmock.hackerrank.com/api/inventory";
-            String jsonResponse = restTemplate.getForObject(url, String.class);
+            String baseUrl = "https://jsonmock.hackerrank.com/api/inventory?page=";
 
-            JsonNode root = objectMapper.readTree(jsonResponse);
-            JsonNode dataArray = root.path("data");
+            int page = 1;
+            int totalPages;
 
-            for (JsonNode node : dataArray) {
-                Product product = new Product(
-                        node.path("barcode").asString(),
-                        node.path("item").asString(),
-                        node.path("category").asString(),
-                        node.path("price").asDouble(),
-                        node.path("discount").asDouble(),
-                        node.path("available").asLong()
-                );
-                sortedProducts.add(product);
-                products.add(product);
-            }
+            do {
+                String jsonResponse = restTemplate.getForObject(baseUrl + page, String.class);
+                JsonNode root = objectMapper.readTree(jsonResponse);
+
+                totalPages = root.path("total_pages").asInt();
+
+                JsonNode dataArray = root.path("data");
+                for (JsonNode node : dataArray) {
+                    Product product = new Product(
+                            node.path("barcode").asString(),
+                            node.path("item").asString(),
+                            node.path("category").asString(),
+                            node.path("price").asDouble(),
+                            node.path("discount").asDouble(),
+                            node.path("available").asLong()
+                    );
+
+                    sortedProducts.add(product);
+                    products.add(product);
+                }
+
+                page++;
+
+            } while (page <= totalPages);
 
             Collections.sort(products);
+            log.info("Loaded products from API");
 
-            System.out.println("Loaded " + products.size() + " products from API");
         } catch (Exception e) {
             log.error("Error during data load", e);
         }
     }
 
     @Override
-    public List<Product> findAll() {
-        return products;
+    public Collection<Product> findAll() {
+        return sortedProducts;
     }
 
     @Override

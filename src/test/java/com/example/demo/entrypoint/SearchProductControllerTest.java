@@ -1,13 +1,10 @@
 package com.example.demo.entrypoint;
 
 import com.example.demo.core.domain.Product;
-import com.example.demo.core.persistence.impl.ProductRepositoryInMemory;
-import com.example.demo.core.service.impl.SearchProductServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -16,10 +13,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -59,7 +52,7 @@ class SearchProductControllerTest {
         String content = response.getResponse().getContentAsString();
         List<Product> actualProducts = objectMapper.readValue(content, new TypeReference<List<Product>>() {});
 
-        assertThat(actualProducts).hasSize(104);
+        assertThat(actualProducts).hasSize(415);
         System.out.println(format("took %d ms to finish processing", System.nanoTime() - start));
     }
 

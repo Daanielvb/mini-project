@@ -19,6 +19,8 @@ public record Product(
     public int compareTo(Product p) {
         return Double.compare(this.price(), p.price());
     }
+
+
 }
 
 

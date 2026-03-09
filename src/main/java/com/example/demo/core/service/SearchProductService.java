@@ -2,11 +2,13 @@ package com.example.demo.core.service;
 
 import com.example.demo.core.domain.Product;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface SearchProductService {
 
-    List<Product> findAll();
+    Collection<Product> findAll();
 
-    List<Product> findAllWithPriceInRange(double minPrice, double maxPrice);
+    Collection<Product> findAllWithPriceInRange(double minPrice, double maxPrice);
+
+    Collection<Product> findAllWithStock();
 }
