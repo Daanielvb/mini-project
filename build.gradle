@@ -32,8 +32,40 @@ sonar {
 	}
 }
 
+def jacocoExclusions = [
+		'com/example/demo/config/*',
+		'com/example/demo/*DemonApplication*',
+		'**/generated/**'
+]
+
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.70
+			}
+		}
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: jacocoExclusions)
+		}))
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: jacocoExclusions)
+		}))
+	}
 
 	reports {
 		xml.required.set(true)
