@@ -3,8 +3,11 @@ package com.example.demo.entrypoint;
 import com.example.demo.core.domain.Product;
 import com.example.demo.core.service.SearchProductService;
 import com.example.demo.entrypoint.response.ProductResponseDTO;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
+@Validated
 public class SearchProductController {
 
     private final SearchProductService searchProductService;
@@ -28,7 +32,7 @@ public class SearchProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Collection<Product>> search(@RequestParam double minPrice, @RequestParam double maxPrice){
+    public ResponseEntity<Collection<Product>> search(@RequestParam @Min(value=0) double minPrice, @RequestParam @PositiveOrZero double maxPrice){
         return ResponseEntity.ok(searchProductService.findAllWithPriceInRange(minPrice, maxPrice));
     }
 

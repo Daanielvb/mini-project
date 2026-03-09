@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
+      - develop
       # You can add other branches like 'develop' if needed
-      # - develop
 
 jobs:
   test:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
-          java-version: '17' # Specify your Java version
+          java-version: '21' # Specify your Java version
 
       - name: Build and run tests
         run: ./gradlew clean build # Or ./gradlew clean build if using Gradle
