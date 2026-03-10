@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -28,3 +28,33 @@ jobs:
 
       - name: Push do branch
         run: git push origin backport/main-to-develop --force
+
+      - name: Abrir PR sem conflito
+        if: env.CONFLICT != 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: backport/main-to-develop
+          base: develop
+          title: "chore: backport main → develop"
+          body: |
+            Backport automático das mudanças da `main` para a `develop`.
+
+            > Gerado automaticamente após merge na `main`.
+          labels: backport
+
+      - name: Abrir PR com aviso de conflito
+        if: env.CONFLICT == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: backport/main-to-develop
+          base: develop
+          title: "⚠️ chore: backport main → develop (conflito)"
+          body: |
+            Backport automático das mudanças da `main` para a `develop`.
+
+            ⚠️ **Foram detectados conflitos** — resolva manualmente antes de fazer o merge.
+
+            > Gerado automaticamente após merge na `main`.
+          labels: backport, conflict
