@@ -1,0 +1,30 @@
+name: Backport main → develop
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backport:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Criar branch de backport
+        run: |
+          git fetch origin develop
+          git checkout -b backport/main-to-develop origin/develop
+          git merge origin/main --no-edit || echo "CONFLICT=true" >> $GITHUB_ENV
+
+      - name: Push do branch
+        run: git push origin backport/main-to-develop --force
