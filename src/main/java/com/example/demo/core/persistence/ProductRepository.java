@@ -10,4 +10,6 @@ public interface ProductRepository {
 
     Collection<Product> search(double minPrice, double maxPrice);
 
+    void addProduct(Product product);
+
 }

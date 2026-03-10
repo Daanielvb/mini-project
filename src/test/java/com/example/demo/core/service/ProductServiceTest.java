@@ -1,8 +1,9 @@
 package com.example.demo.core.service;
 
+import com.example.demo.core.gateway.impl.KafkaProducer;
 import com.example.demo.core.persistence.ProductRepository;
 import com.example.demo.core.service.exception.CustomValidationException;
-import com.example.demo.core.service.impl.SearchProductServiceImplementation;
+import com.example.demo.core.service.impl.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,25 +12,29 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
+import static com.example.demo.core.domain.Product.makeOne;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SearchProductServiceTest {
+class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private KafkaProducer producer;
+
     @InjectMocks
-    private SearchProductServiceImplementation searchProductService;
+    private ProductService productService;
 
     @Test
     void shouldReturnAllProducts(){
-        var result = searchProductService.findAll();
+        var result = productService.findAll();
 
         verify(productRepository).findAll();
         assertThat(result).isEmpty();
@@ -43,7 +48,7 @@ class SearchProductServiceTest {
 
         when(productRepository.search(anyDouble(), anyDouble())).thenReturn(emptyList());
 
-        var result = searchProductService.findAllWithPriceInRange(minPrice, maxPrice);
+        var result = productService.findAllWithPriceInRange(minPrice, maxPrice);
 
         assertThat(result).isEmpty();
         verify(productRepository).search(minPrice, maxPrice);
@@ -51,12 +56,18 @@ class SearchProductServiceTest {
 
     @Test
     void shouldRefuseInvalidPriceRange(){
-        assertThatThrownBy( () -> searchProductService.findAllWithPriceInRange(0, 0))
+        assertThatThrownBy( () -> productService.findAllWithPriceInRange(0, 0))
                 .isInstanceOf(CustomValidationException.class)
                 .hasMessage("Invalid price input")
                 .satisfies(e -> {
                     assertThat(((CustomValidationException) e).getErrors()).isEqualTo(Set.of("Min price 0.0 exceeds max price 0.0"));
 
                 });
+    }
+
+    @Test
+    void shouldAddProduct(){
+        doNothing().when(producer).produce(any());
+        productService.add(makeOne(200));
     }
 }

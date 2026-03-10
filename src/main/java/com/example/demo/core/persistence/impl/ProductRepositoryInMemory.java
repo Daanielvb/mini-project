@@ -74,4 +74,10 @@ public class ProductRepositoryInMemory implements ProductRepository {
     public List<Product> search(double minPrice, double maxPrice) {
         return sortedProducts.stream().filter(it -> it.price() >= minPrice && it.price() <= maxPrice).toList();
     }
+
+    @Override
+    public void addProduct(Product product) {
+        this.sortedProducts.add(product);
+        this.products.add(product);
+    }
 }
