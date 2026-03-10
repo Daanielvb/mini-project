@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.2-SNAPSHOT'
+version = System.getenv("APP_VERSION") ?: '0.0.1-SNAPSHOT'
 description = 'Demo project for Spring Boot'
 
 java {
@@ -32,13 +32,45 @@ sonar {
 	}
 }
 
+def jacocoExclusions = [
+		'com/example/demo/config/*',
+		'com/example/demo/*DemonApplication*',
+		'**/generated/**'
+]
+
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.70
+			}
+		}
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: jacocoExclusions)
+		}))
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+
 tasks.jacocoTestReport {
-	dependsOn(tasks.test) // Garante que os testes rodem antes do relatório
+	dependsOn(tasks.test)
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: jacocoExclusions)
+		}))
+	}
 
 	reports {
 		xml.required.set(true)
 		html.required.set(true)
-		// html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // Pasta personalizada
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // Pasta personalizada
 	}
 }
 
@@ -50,11 +82,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'com.mysql:mysql-connector-j:9.6.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {

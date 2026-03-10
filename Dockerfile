@@ -7,4 +7,4 @@ ENV JAVA_OPTS="-Xmx512m"
 
 
 # Aqui usamos o nome completo do jar principal no ENTRYPOINT
-ENTRYPOINT ["java", "-jar", "demo-0.0.2-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
