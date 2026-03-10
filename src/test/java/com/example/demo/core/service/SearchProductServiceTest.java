@@ -1,8 +1,10 @@
 package com.example.demo.core.service;
 
+import com.example.demo.core.domain.Product;
+import com.example.demo.core.gateway.impl.KafkaProducer;
 import com.example.demo.core.persistence.ProductRepository;
 import com.example.demo.core.service.exception.CustomValidationException;
-import com.example.demo.core.service.impl.SearchProductServiceImplementation;
+import com.example.demo.core.service.impl.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,12 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
+import static com.example.demo.core.domain.Product.makeOne;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SearchProductServiceTest {
@@ -24,8 +27,11 @@ class SearchProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private KafkaProducer producer;
+
     @InjectMocks
-    private SearchProductServiceImplementation searchProductService;
+    private ProductService searchProductService;
 
     @Test
     void shouldReturnAllProducts(){
@@ -58,5 +64,11 @@ class SearchProductServiceTest {
                     assertThat(((CustomValidationException) e).getErrors()).isEqualTo(Set.of("Min price 0.0 exceeds max price 0.0"));
 
                 });
+    }
+
+    @Test
+    void shouldAddProduct(){
+        doNothing().when(producer).produce(any());
+        searchProductService.add(makeOne(200));
     }
 }
