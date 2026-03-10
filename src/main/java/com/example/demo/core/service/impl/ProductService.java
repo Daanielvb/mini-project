@@ -1,8 +1,10 @@
 package com.example.demo.core.service.impl;
 
 import com.example.demo.core.domain.Product;
+import com.example.demo.core.gateway.impl.KafkaProducer;
 import com.example.demo.core.persistence.ProductRepository;
 import com.example.demo.core.service.SearchProductService;
+import com.example.demo.core.service.WriteProductService;
 import com.example.demo.core.service.exception.CustomValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +19,10 @@ import static java.lang.String.format;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SearchProductServiceImplementation implements SearchProductService {
+public class ProductService implements SearchProductService, WriteProductService {
 
     private final ProductRepository productRepository;
+    private final KafkaProducer producer;
 
     @Override
     public Collection<Product> findAll() {
@@ -53,5 +56,11 @@ public class SearchProductServiceImplementation implements SearchProductService 
     @Override
     public Collection<Product> findAllWithStock() {
         return productRepository.findAll().stream().filter(it -> it.available() >= 0).toList();
+    }
+
+    @Override
+    public void add(Product product){
+        productRepository.addProduct(product);
+        producer.produce(product.barCode());
     }
 }
