@@ -1,6 +1,5 @@
 package com.example.demo.core.service;
 
-import com.example.demo.core.domain.Product;
 import com.example.demo.core.gateway.impl.KafkaProducer;
 import com.example.demo.core.persistence.ProductRepository;
 import com.example.demo.core.service.exception.CustomValidationException;
@@ -22,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SearchProductServiceTest {
+class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -31,11 +30,11 @@ class SearchProductServiceTest {
     private KafkaProducer producer;
 
     @InjectMocks
-    private ProductService searchProductService;
+    private ProductService productService;
 
     @Test
     void shouldReturnAllProducts(){
-        var result = searchProductService.findAll();
+        var result = productService.findAll();
 
         verify(productRepository).findAll();
         assertThat(result).isEmpty();
@@ -49,7 +48,7 @@ class SearchProductServiceTest {
 
         when(productRepository.search(anyDouble(), anyDouble())).thenReturn(emptyList());
 
-        var result = searchProductService.findAllWithPriceInRange(minPrice, maxPrice);
+        var result = productService.findAllWithPriceInRange(minPrice, maxPrice);
 
         assertThat(result).isEmpty();
         verify(productRepository).search(minPrice, maxPrice);
@@ -57,7 +56,7 @@ class SearchProductServiceTest {
 
     @Test
     void shouldRefuseInvalidPriceRange(){
-        assertThatThrownBy( () -> searchProductService.findAllWithPriceInRange(0, 0))
+        assertThatThrownBy( () -> productService.findAllWithPriceInRange(0, 0))
                 .isInstanceOf(CustomValidationException.class)
                 .hasMessage("Invalid price input")
                 .satisfies(e -> {
@@ -69,6 +68,6 @@ class SearchProductServiceTest {
     @Test
     void shouldAddProduct(){
         doNothing().when(producer).produce(any());
-        searchProductService.add(makeOne(200));
+        productService.add(makeOne(200));
     }
 }
