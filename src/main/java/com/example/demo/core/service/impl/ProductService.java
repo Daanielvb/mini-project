@@ -1,13 +1,14 @@
 package com.example.demo.core.service.impl;
 
 import com.example.demo.core.domain.Product;
-import com.example.demo.core.gateway.impl.KafkaProducer;
+import com.example.demo.core.gateway.Producer;
 import com.example.demo.core.persistence.ProductRepository;
 import com.example.demo.core.service.SearchProductService;
 import com.example.demo.core.service.WriteProductService;
 import com.example.demo.core.service.exception.CustomValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -22,7 +23,9 @@ import static java.lang.String.format;
 public class ProductService implements SearchProductService, WriteProductService {
 
     private final ProductRepository productRepository;
-    private final KafkaProducer producer;
+
+    @Qualifier("kafka")
+    private final Producer producer;
 
     @Override
     public Collection<Product> findAll() {

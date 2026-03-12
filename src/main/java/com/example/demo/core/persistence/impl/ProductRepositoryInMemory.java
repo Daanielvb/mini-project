@@ -2,13 +2,13 @@ package com.example.demo.core.persistence.impl;
 
 import com.example.demo.core.domain.Product;
 import com.example.demo.core.persistence.ProductRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -41,9 +41,9 @@ public class ProductRepositoryInMemory implements ProductRepository {
                 JsonNode dataArray = root.path("data");
                 for (JsonNode node : dataArray) {
                     Product product = new Product(
-                            node.path("barcode").asString(),
-                            node.path("item").asString(),
-                            node.path("category").asString(),
+                            node.path("barcode").asText(),
+                            node.path("item").asText(),
+                            node.path("category").asText(),
                             node.path("price").asDouble(),
                             node.path("discount").asDouble(),
                             node.path("available").asLong()
