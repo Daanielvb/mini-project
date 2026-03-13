@@ -31,7 +31,7 @@ class SearchProductControllerTest {
     @Test
     public void shouldListAllProducts() throws Exception {
         //given
-        mockMvc.perform(get("/products"))
+        mockMvc.perform(get("/products/v1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -42,7 +42,7 @@ class SearchProductControllerTest {
         String minPrice = "100";
         String maxPrice = "1000";
         long start = System.nanoTime();
-        var response = mockMvc.perform(get("/products/search")
+        var response = mockMvc.perform(get("/products/v1/search")
                 .param("minPrice", minPrice)
                 .param("maxPrice", maxPrice))
                 .andDo(print())
@@ -62,7 +62,7 @@ class SearchProductControllerTest {
         String minPrice = "30";
         String maxPrice = "20";
 
-        mockMvc.perform(get("/products/search")
+        mockMvc.perform(get("/products/v1/search")
                         .param("minPrice", minPrice)
                         .param("maxPrice", maxPrice))
                 .andDo(print())

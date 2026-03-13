@@ -1,0 +1,63 @@
+#openapi: 3.1.0
+#info:
+#  title: Product Api OpenAPI 3.1
+#  description: Simple product API for studying purposes
+#  version: "0.0.1"
+#paths:
+#  /products:
+#    get:
+#      tags:
+#        - pet
+#      summary: Get an existing product.
+#      description: Update an existing pet by Id.
+#      operationId: getProduct
+#      responses:
+#        '200':
+#          description: Successful operation
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Product'
+#        '400':
+#          description: Invalid ID supplied
+#        '404':
+#          description: Pet not found
+#        '422':
+#          description: Validation exception
+#        default:
+#          description: Unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/Product"
+#      security:
+#        - petstore_auth:
+#            - read:products
+#
+#securitySchemes:
+#  petstore_auth:
+#    type: oauth2
+#    flows:
+#      implicit:
+#        authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+#        scopes:
+#          "read:products": read your products
+#
+#components:
+#  schemas:
+#    Product:
+#      properties:
+#        barCode:
+#          type: string
+#        item:
+#          type: string
+#          examples: [198772]
+#        category:
+#          type: string
+#        price:
+#          type: double
+#        discount:
+#          type: double
+#        available:
+#          type: integer
+#          format: int64
